@@ -1,6 +1,6 @@
 # 📦 Admin Product Management Dashboard
 
-> A full-stack Admin Dashboard to manage **Categories** and **Products** with a professional UI — built with **Spring Boot**, **REST APIs**, **Bootstrap 5**, **JavaScript**, and **MySQL**.
+> A full-stack Admin Dashboard to manage **Categories** and **Products** with a professional UI — built with **Spring Boot**, **REST APIs**, **Bootstrap 5**, **JavaScript**, and **Postgres**.
 
 ---
 
@@ -40,7 +40,7 @@
            |
            ▼
 +--------------------------+
-|   MySQL / H2 Database    |
+|       Postgres           |
 +--------------------------+
 ```
 
@@ -241,7 +241,7 @@ CommandLineRunner seedData(CategoryRepository repo) {
 | Layer     | Technology                                  |
 |-----------|---------------------------------------------|
 | Backend   | Java 17, Spring Boot, Spring Data JPA, Hibernate |
-| Database  | MySQL / H2                                  |
+| Database  | Postgres                                    |
 | Frontend  | HTML5, Bootstrap 5, JavaScript              |
 | DevOps    | Docker, Docker Compose                      |
 
@@ -266,4 +266,3 @@ CommandLineRunner seedData(CategoryRepository repo) {
 
 ---
 
-> ⭐ If you found this project helpful, please consider giving it a star!

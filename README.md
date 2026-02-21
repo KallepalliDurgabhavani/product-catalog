@@ -1,28 +1,39 @@
 📦 Admin Product Management Dashboard
 
-A full-stack Admin Dashboard for managing Categories and Products with a Bootstrap UI, Spring Boot backend, admin login, and REST APIs.
+A Full Stack Admin Dashboard to manage Categories and Products with a professional UI using Spring Boot, REST APIs, Bootstrap, JavaScript, and MySQL.
 
-👨‍💻 Admin Login (Credentials)
-
-Only the following credentials can access the dashboard:
-
-Username: admin
-Password: admin123
-🏗️ Project Architecture
-Frontend (HTML + Bootstrap + JS)
-        |
-        v
-Spring Boot REST API (Controller Layer)
-        |
-        v
-Service Layer (Business Logic)
-        |
-        v
-Repository Layer (JPA / Hibernate)
-        |
-        v
-MySQL / PostgreSQL / H2 Database
-📂 Project Structure
+🔐 Admin Login Credentials
+Username	Password
+admin	admin123
+🏗️ System Architecture
++------------------+
+|   Admin Browser  |
+| (HTML, Bootstrap |
+|  JavaScript)     |
++--------+---------+
+         |
+         v
++--------------------------+
+|   Spring Boot REST API   |
+|  Controller Layer        |
++------------+--------------+
+             |
+             v
++--------------------------+
+|     Service Layer         |
+| (Business Logic)           |
++------------+--------------+
+             |
+             v
++--------------------------+
+|   Repository Layer (JPA)  |
++------------+--------------+
+             |
+             v
++--------------------------+
+|     MySQL / H2 Database   |
++--------------------------+
+📂 Project Folder Structure
 admin-dashboard/
 │
 ├── backend/
@@ -43,103 +54,57 @@ admin-dashboard/
 │   └── css/
 │       └── style.css
 │
-├── docker-compose.yml
 ├── Dockerfile
+├── docker-compose.yml
 └── README.md
 🎨 Frontend Features
-✅ Admin Dashboard UI
-
-White professional background
-
-Bootstrap Admin layout
-
-Sidebar navigation
-
-Search & Pagination UI
-
-✅ Category Management
-
-Add Category
-
-View Category List (Dropdown & List)
-
-No typing category ID (Auto generated)
-
-✅ Product Management
-
-Add Product
-
-View Products
-
-Update Product
-
-Delete Product
-
-View All Products Button
-
-✅ Authentication
-
-Static Admin Login
-
-Session-based login
-
-Unauthorized users redirected to login page
-
-🔗 REST API Endpoints
-🔐 Auth API
-Method	URL	Description
+Feature	Description
+Admin Login	Static username & password
+Dashboard UI	Professional white theme
+Category CRUD	Add, View, Delete categories
+Product CRUD	Add, View, Update, Delete products
+Dropdown Category	Category auto-load dropdown
+Search & Pagination	Product search and page UI
+Session Check	Only admin can access pages
+🔗 REST API Documentation
+🔐 Authentication API
+Method	Endpoint	Description
 POST	/api/login	Admin login
-Request
+Request Body
 {
   "username": "admin",
   "password": "admin123"
 }
 📁 Category APIs
-Method	URL	Description
+Method	Endpoint	Description
 POST	/api/categories	Add category
 GET	/api/categories	Get all categories
 DELETE	/api/categories/{id}	Delete category
-Add Category Request
+Example Request
 {
   "name": "Electronics"
 }
 📦 Product APIs
-Method	URL	Description
+Method	Endpoint	Description
 POST	/api/products	Add product
 GET	/api/products	Get all products
 GET	/api/products/{id}	Get product by ID
 PUT	/api/products/{id}	Update product
 DELETE	/api/products/{id}	Delete product
-Add Product Request
+Example Request
 {
   "name": "Laptop",
   "price": 50000,
   "categoryId": 1
 }
 🖥️ Frontend Pages
-Page	Description
+Page	Purpose
 login.html	Admin login page
 dashboard.html	Admin dashboard
 categories.html	Category management
-products.html	Product CRUD page
-📜 JavaScript File (app.js)
-
-Handles:
-
-Fetch categories
-
-Add category
-
-Load dropdown
-
-Product CRUD
-
-Search & pagination
-
-Admin session check
-
+products.html	Product management
 🐳 Docker Setup
-Dockerfile (Backend)
+Dockerfile
 FROM openjdk:17
 COPY target/admin-dashboard.jar app.jar
 ENTRYPOINT ["java","-jar","/app.jar"]
@@ -160,16 +125,13 @@ services:
       MYSQL_DATABASE: admin_db
     ports:
       - "3306:3306"
-▶️ Run Entire Project With One Command
+▶️ Run Full Project With One Command
 docker compose up --build -d
 
 Stop project:
 
 docker compose down
-🧪 Database Seeder (Initial Data)
-
-Add in Spring Boot:
-
+🌱 Database Seeder (Initial Data)
 @Bean
 CommandLineRunner seedData(CategoryRepository repo) {
     return args -> {
@@ -179,52 +141,31 @@ CommandLineRunner seedData(CategoryRepository repo) {
         }
     };
 }
-🚀 How to Run Without Docker
+▶️ Run Without Docker
 Backend
 mvn spring-boot:run
 Frontend
 
-Open:
+Open in browser:
 
 frontend/login.html
-📌 Technologies Used
-Backend
-
-Java 17
-
-Spring Boot
-
-Spring Data JPA
-
-postgres
-
-REST API
-
-Frontend
-
-HTML5
-
-Bootstrap 5
-
-JavaScript (Fetch API)
-
-DevOps
-
-Docker
-
-Docker Compose
-
-📊 Future Enhancements
+🧑‍💻 Technologies Used
+Layer	Technology
+Backend	Java 17, Spring Boot, JPA, Hibernate
+Database	MySQL / H2
+Frontend	HTML, Bootstrap 5, JavaScript
+DevOps	Docker, Docker Compose
+🚀 Future Enhancements
 
 JWT Authentication
 
-Role-based access (Admin/User)
+Role Based Access
 
-Image upload for products
+Product Image Upload
 
 React Admin Panel
 
-Pagination backend support
+Backend Pagination
 
 Swagger API Documentation
 
@@ -232,4 +173,4 @@ Swagger API Documentation
 
 Kallepalli Durga Bhavani
 Cloud & Full Stack Developer
-AWS | Java | Spring Boot | postgres | DevOps"# product-catalog" 
+AWS | Java | Spring Boot | DevOps

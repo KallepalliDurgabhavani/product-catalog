@@ -12,6 +12,7 @@ import java.math.BigDecimal;
 
 @Configuration
 public class DatabaseSeeder {
+    
 
     @Bean
     CommandLineRunner initDatabase(CategoryRepository categoryRepo, ProductRepository productRepo) {

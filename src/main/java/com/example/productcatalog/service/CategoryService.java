@@ -4,7 +4,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
-
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import com.example.productcatalog.dto.CategoryRequestDTO;
 import com.example.productcatalog.dto.CategoryResponseDTO;
 import com.example.productcatalog.exception.ResourceNotFoundException;
@@ -20,6 +21,7 @@ public class CategoryService {
     private final CategoryRepository categoryRepo;
 
     // CREATE
+     @Transactional
     public CategoryResponseDTO createCategory(CategoryRequestDTO dto) {
         Category c = new Category();
         c.setName(dto.getName());
@@ -28,6 +30,7 @@ public class CategoryService {
     }
 
     // GET ALL
+    
     public List<CategoryResponseDTO> getAllCategories() {
         return categoryRepo.findAll()
                 .stream()
@@ -36,6 +39,7 @@ public class CategoryService {
     }
 
     // GET BY ID
+    
     public CategoryResponseDTO getCategoryById(Long id) {
         Category c = categoryRepo.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Category not found with id " + id));
@@ -43,6 +47,7 @@ public class CategoryService {
     }
 
     // UPDATE
+     @Transactional
     public CategoryResponseDTO updateCategory(Long id, CategoryRequestDTO dto) {
         Category c = categoryRepo.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Category not found"));
@@ -52,6 +57,7 @@ public class CategoryService {
     }
 
     // DELETE
+     @Transactional
     public void deleteCategory(Long id) {
         Category c = categoryRepo.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Category not found"));
@@ -59,6 +65,7 @@ public class CategoryService {
     }
 
     // Mapper
+     
     private CategoryResponseDTO mapToResponse(Category c) {
         CategoryResponseDTO res = new CategoryResponseDTO();
         res.setId(c.getId());

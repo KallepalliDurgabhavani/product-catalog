@@ -5,7 +5,7 @@ import java.util.stream.Collectors;
 
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
-
+import org.springframework.transaction.annotation.Transactional;
 import com.example.productcatalog.dto.*;
 import com.example.productcatalog.exception.ResourceNotFoundException;
 import com.example.productcatalog.model.*;
@@ -21,6 +21,7 @@ public class ProductService {
     private final CategoryRepository categoryRepo;
 
     // CREATE PRODUCT
+     @Transactional
     public ProductResponseDTO createProduct(ProductRequestDTO dto) {
         Category category = categoryRepo.findById(dto.getCategoryId())
                 .orElseThrow(() -> new ResourceNotFoundException("Category not found"));
@@ -48,6 +49,7 @@ public class ProductService {
     }
 
     // UPDATE PRODUCT
+     @Transactional
     public ProductResponseDTO updateProduct(Long id, ProductRequestDTO dto) {
         Product p = productRepo.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Product not found"));
@@ -64,6 +66,7 @@ public class ProductService {
     }
 
     // DELETE PRODUCT
+     @Transactional
     public void deleteProduct(Long id) {
         Product p = productRepo.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Product not found"));

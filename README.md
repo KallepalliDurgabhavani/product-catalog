@@ -1,60 +1,60 @@
-Product Catalog – Spring Boot REST API (Docker + JPA + PostgreSQL)
-A Spring Boot–based Product Catalog REST API for managing categories and products, built with layered architecture, DTOs, validation, Dockerized PostgreSQL, and comprehensive tests.
+# Product Catalog – Spring Boot REST API (Docker + JPA + PostgreSQL)
 
-Features
-Full CRUD for Categories and Products.
+A Spring Boot–based **Product Catalog REST API** for managing categories and products, built with layered architecture, DTOs, validation, Dockerized PostgreSQL, and comprehensive tests.
 
-Pagination support for listing products.
+---
 
-DTO-based request/response models (no entities exposed).
+## Features
 
-Bean Validation on all incoming payloads.
+- Full CRUD for **Categories** and **Products**.
+- **Pagination** support for listing products.
+- **DTO-based** request/response models (no entities exposed).
+- **Bean Validation** on all incoming payloads.
+- Global exception handling with **consistent JSON** error responses.
+- **PostgreSQL** integration with Spring Data JPA.
+- **Dockerfile** (multi-stage) and `docker-compose.yml` for one‑command startup.
+- Automatic **database seeding** (2+ categories, 5+ products).
+- Unit tests for services and integration tests for REST APIs.
 
-Global exception handling with consistent JSON error responses.
+---
 
-PostgreSQL integration with Spring Data JPA.
+## Tech Stack
 
-Dockerfile (multi-stage) and docker-compose.yml for one‑command startup.
+- Java 17
+- Spring Boot (Web, Data JPA, Validation)
+- PostgreSQL
+- Maven
+- Docker & Docker Compose
+- JUnit 5, Mockito, Spring Boot Test
 
-Automatic database seeding (2+ categories, 5+ products).
+---
 
-Unit tests for services and integration tests for REST APIs.
+## System Architecture
 
-Tech Stack
-Java 17 (or your version)
+- **Controller layer**  
+  `CategoryController`, `ProductController` expose REST endpoints under `/api/categories` and `/api/products`.
 
-Spring Boot (Web, Data JPA, Validation)
+- **Service layer**  
+  `CategoryService`, `ProductService` contain business logic and transactional boundaries using `@Transactional`.
 
-PostgreSQL
+- **Repository layer**  
+  `CategoryRepository`, `ProductRepository` extend `JpaRepository` for database access.
 
-Maven
+- **DTO layer**  
+  Request DTOs: `CategoryRequestDTO`, `ProductRequestDTO`  
+  Response DTOs: `CategoryResponseDTO`, `ProductResponseDTO`, `ErrorResponse`.
 
-Docker & Docker Compose
+- **Exception handling**  
+  Custom `ResourceNotFoundException` and `GlobalExceptionHandler` that returns structured JSON errors.
 
-JUnit 5, Mockito, Spring Boot Test
+- **Configuration**  
+  `DatabaseSeeder` seeds initial categories and products at startup, especially when running via Docker Compose.
 
-System Architecture
-Controller layer
-CategoryController, ProductController expose REST endpoints under /api/categories and /api/products.
+---
 
-Service layer
-CategoryService, ProductService contain business logic and transactional boundaries using @Transactional.
+## Project Structure
 
-Repository layer
-CategoryRepository, ProductRepository extend JpaRepository for database access.
-
-DTO layer
-Request DTOs: CategoryRequestDTO, ProductRequestDTO
-Response DTOs: CategoryResponseDTO, ProductResponseDTO, ErrorResponse.
-
-Exception handling
-Custom ResourceNotFoundException and GlobalExceptionHandler that returns structured JSON errors.
-
-Configuration
-DatabaseSeeder seeds initial categories and products at startup, especially when running via Docker Compose.
-
-Project Structure
-text
+```text
 src
  └── main
      ├── java
@@ -87,12 +87,17 @@ src
          └── static
              └── js
                  └── app.js
-Environment Variables
-Configuration is externalized via environment variables. Use .env in development and .env.example as reference.
+```
 
-.env.example:
+---
 
-text
+## Environment Variables
+
+Configuration is externalized via environment variables. Use `.env` in development and `.env.example` as reference.
+
+`.env.example`:
+
+```env
 # Database Configuration
 DB_HOST=localhost
 DB_PORT=5432
@@ -102,157 +107,170 @@ DB_PASSWORD=postgres
 
 # Server Configuration
 SERVER_PORT=8080
-Running the Application (Docker Compose)
-Prerequisites
-Docker
+```
 
-Docker Compose
+---
 
-Steps
-Copy .env.example to .env and update values if needed:
+## Running the Application (Docker Compose)
 
-bash
+### Prerequisites
+
+- Docker
+- Docker Compose
+
+### Steps
+
+1. Copy `.env.example` to `.env` and update values if needed:
+
+```bash
 cp .env.example .env
-Build and start services:
+```
 
-bash
+2. Build and start services:
+
+```bash
 docker compose up --build
-Access API:
+```
 
-Base URL: http://localhost:8080
+3. Access API:
 
-Health check: http://localhost:8080/actuator/health (if you added Actuator)
+- Base URL: `http://localhost:8080`
+- Health check (if Actuator added): `http://localhost:8080/actuator/health`
 
-Swagger / API docs (if configured): http://localhost:8080/swagger-ui.html
+`docker-compose.yml` uses:
 
-docker-compose.yml uses:
+- `db` service with PostgreSQL and a **healthcheck**.
+- `backend` service (Spring Boot app) that waits for `db` to be healthy before starting.
 
-db service with PostgreSQL and a healthcheck.
+---
 
-backend service (Spring Boot app) that waits for db to be healthy before starting.
+## Running the Application Without Docker
 
-Running the Application Without Docker
-Prerequisites
-Java (JDK 17+)
+### Prerequisites
 
-Maven
+- Java (JDK 17+)
+- Maven
+- A running PostgreSQL instance
 
-A running PostgreSQL instance
+### Steps
 
-Steps
-Create a database (default name productdb):
+1. Create a database (default name `productdb`):
 
-sql
+```sql
 CREATE DATABASE productdb;
-Set environment variables or update application.properties:
+```
 
-text
+2. Set environment variables or update `application.properties`:
+
+```properties
 spring.datasource.url=jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5432}/${DB_NAME:productdb}
 spring.datasource.username=${DB_USERNAME:postgres}
 spring.datasource.password=${DB_PASSWORD:postgres}
-Build and run:
+```
 
-bash
+3. Build and run:
+
+```bash
 mvn clean package
 java -jar target/product-catalog-*.jar
-Application will start on http://localhost:8080 by default.
+```
 
-REST API Documentation
-Category Endpoints
-Base path: /api/categories
+Application will start on `http://localhost:8080` by default.
 
-Create Category
-POST /api/categories
+---
 
-Body:
+## REST API Documentation
 
-json
+### Category Endpoints
+
+Base path: `/api/categories`
+
+#### Create Category
+
+- **POST** `/api/categories`
+- **Body**:
+
+```json
 {
   "name": "Electronics"
 }
-Responses:
+```
 
-201 Created – returns CategoryResponseDTO
+- **Responses**:
+  - `201 Created` – returns `CategoryResponseDTO`
+  - `400 Bad Request` – validation errors (`ErrorResponse`)
 
-400 Bad Request – validation errors (ErrorResponse)
+#### Get All Categories
 
-Get All Categories
-GET /api/categories
+- **GET** `/api/categories`
+- **Responses**:
+  - `200 OK` – `List<CategoryResponseDTO>`
 
-Responses:
+#### Get Category by ID
 
-200 OK – List<CategoryResponseDTO>
+- **GET** `/api/categories/{id}`
+- **Responses**:
+  - `200 OK` – `CategoryResponseDTO`
+  - `404 Not Found` – when category does not exist
 
-Get Category by ID
-GET /api/categories/{id}
+#### Update Category
 
-Responses:
+- **PUT** `/api/categories/{id}`
+- **Body**:
 
-200 OK – CategoryResponseDTO
-
-404 Not Found – when category does not exist
-
-Update Category
-PUT /api/categories/{id}
-
-Body:
-
-json
+```json
 {
   "name": "Updated Name"
 }
-Responses:
+```
 
-200 OK – updated CategoryResponseDTO
+- **Responses**:
+  - `200 OK` – updated `CategoryResponseDTO`
+  - `404 Not Found`
 
-404 Not Found
+#### Delete Category
 
-Delete Category
-DELETE /api/categories/{id}
+- **DELETE** `/api/categories/{id}`
+- **Responses**:
+  - `204 No Content`
+  - `404 Not Found`
 
-Responses:
+---
 
-204 No Content
+### Product Endpoints
 
-404 Not Found
+Base path: `/api/products`
 
-Product Endpoints
-Base path: /api/products
+#### Create Product
 
-Create Product
-POST /api/products
+- **POST** `/api/products`
+- **Body**:
 
-Body:
-
-json
+```json
 {
   "name": "Laptop",
   "description": "Gaming laptop",
   "price": 75000.0,
   "categoryId": 1
 }
-Responses:
+```
 
-201 Created – ProductResponseDTO
+- **Responses**:
+  - `201 Created` – `ProductResponseDTO`
+  - `400 Bad Request` – validation errors
+  - `404 Not Found` – category not found
 
-400 Bad Request – validation errors
+#### Get All Products (Paginated)
 
-404 Not Found – category not found
+- **GET** `/api/products`
+- **Query params**:
+  - `page` (default `0`)
+  - `size` (default `10`)
 
-Get All Products (Paginated)
-GET /api/products
+- **Responses**:
+  - `200 OK` – `Page<ProductResponseDTO>`:
 
-Query params:
-
-page (default 0)
-
-size (default 10)
-
-Responses:
-
-200 OK – Page<ProductResponseDTO>:
-
-json
+```json
 {
   "content": [
     {
@@ -269,142 +287,142 @@ json
   "size": 10,
   "number": 0
 }
-Get Product by ID
-GET /api/products/{id}
+```
 
-Responses:
+#### Get Product by ID
 
-200 OK – ProductResponseDTO
+- **GET** `/api/products/{id}`
+- **Responses**:
+  - `200 OK` – `ProductResponseDTO`
+  - `404 Not Found`
 
-404 Not Found
+#### Update Product
 
-Update Product
-PUT /api/products/{id}
+- **PUT** `/api/products/{id}`
+- **Body**:
 
-Body:
-
-json
+```json
 {
   "name": "Updated Laptop",
   "description": "Updated description",
   "price": 80000.0,
   "categoryId": 1
 }
-Responses:
+```
 
-200 OK – updated ProductResponseDTO
+- **Responses**:
+  - `200 OK` – updated `ProductResponseDTO`
+  - `404 Not Found` – product or category not found
 
-404 Not Found – product or category not found
+#### Delete Product
 
-Delete Product
-DELETE /api/products/{id}
+- **DELETE** `/api/products/{id}`
+- **Responses**:
+  - `204 No Content`
+  - `404 Not Found`
 
-Responses:
+---
 
-204 No Content
+## Validation and Error Handling
 
-404 Not Found
+### Validation
 
-Validation and Error Handling
-Validation
-Uses Jakarta Bean Validation (@NotBlank, @NotNull, @Positive, etc.) on request DTOs:
+- Uses **Jakarta Bean Validation** (`@NotBlank`, `@NotNull`, `@Positive`, etc.) on request DTOs:
 
-CategoryRequestDTO
+  - `CategoryRequestDTO`
+  - `ProductRequestDTO`
 
-ProductRequestDTO
+Invalid requests trigger `MethodArgumentNotValidException`, handled globally.
 
-Invalid requests trigger MethodArgumentNotValidException, handled globally.
+### Error Response Format
 
-Error Response Format
 All handled errors (validation and not found) return a consistent JSON object:
 
-json
+```json
 {
   "status": 400,
   "message": "field: error message, ...",
   "timestamp": "2026-04-15T13:45:30.123"
 }
+```
+
 or
 
-json
+```json
 {
   "status": 404,
   "message": "Category not found with id: 999",
   "timestamp": "2026-04-15T13:45:30.123"
 }
-This is implemented in GlobalExceptionHandler using an ErrorResponse DTO.
+```
 
-Database Seeding
-On application startup, DatabaseSeeder seeds initial data when the database is empty:
+This is implemented in `GlobalExceptionHandler` using an `ErrorResponse` DTO.
 
-At least 2 categories (e.g., Electronics, Clothing).
+---
 
-At least 5 products spread across categories.
+## Database Seeding
+
+On application startup, `DatabaseSeeder` seeds initial data when the database is empty:
+
+- At least **2 categories** (e.g., Electronics, Clothing).
+- At least **5 products** spread across categories.
 
 Example seeded data:
 
-Categories:
+- Categories:
+  - Electronics
+  - Clothing
+  - Books
 
-Electronics
+- Products:
+  - Laptop (Electronics)
+  - Smartphone (Electronics)
+  - Jeans (Clothing)
+  - T-Shirt (Clothing)
+  - Java Book (Books)
 
-Clothing
+---
 
-Books
+## Testing
 
-Products:
+### Unit Tests
 
-Laptop (Electronics)
+Located in `src/test/java/com/example/productcatalog/service`:
 
-Smartphone (Electronics)
+- `CategoryServiceTest`
+- `ProductServiceTest`
 
-Jeans (Clothing)
+They use **JUnit 5** and **Mockito** to:
 
-T-Shirt (Clothing)
+- Mock repositories.
+- Test create, read, update, delete flows.
+- Verify behavior when entities are not found (throws `ResourceNotFoundException`).
 
-Java Book (Books)
+### Integration Tests
 
-This helps testers quickly verify API responses.
+Located in `src/test/java/com/example/productcatalog/controller`:
 
-Testing
-Unit Tests
-Located in src/test/java/com/example/productcatalog/service:
+- `CategoryControllerTest`
+- `ProductControllerTest`
 
-CategoryServiceTest
+They use **Spring Boot Test** and **MockMvc** to:
 
-ProductServiceTest
+- Call HTTP endpoints (`/api/categories`, `/api/products`).
+- Assert status codes, response bodies, and pagination.
+- Verify error codes for missing entities.
 
-They use JUnit 5 and Mockito to:
+### Run Tests
 
-Mock repositories.
-
-Test create, read, update, delete flows.
-
-Verify behavior when entities are not found (throws ResourceNotFoundException).
-
-Integration Tests
-Located in src/test/java/com/example/productcatalog/controller:
-
-CategoryControllerTest
-
-ProductControllerTest
-
-They use Spring Boot Test and MockMvc to:
-
-Call HTTP endpoints (/api/categories, /api/products).
-
-Assert status codes, response bodies, and pagination.
-
-Verify error codes for missing entities.
-
-Run Tests
-bash
+```bash
 mvn clean test
-How to Use with a Frontend
-The API supports CORS (@CrossOrigin(origins = "*")) on controllers.
+```
 
-You can build any frontend (React/Angular/Vanilla JS) that calls:
+---
 
-GET /api/categories to show filters.
+## Frontend Usage
 
-GET /api/products?page=0&size=10 to show paginated products.
-
+- The API supports CORS (`@CrossOrigin(origins = "*")`) on controllers.
+- Any frontend (React/Angular/Vanilla JS) can:
+  - Fetch categories via `GET /api/categories`.
+  - Fetch products via `GET /api/products?page=0&size=10`.
+  - Perform admin CRUD via POST/PUT/DELETE endpoints.
